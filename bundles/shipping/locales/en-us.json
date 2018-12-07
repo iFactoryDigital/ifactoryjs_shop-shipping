@@ -1,0 +1,16 @@
+{
+  "address" : {
+    "save"   : "Save Address",
+    "name"   : "Name",
+    "title"  : "Shipping Address",
+    "create" : "Add Address",
+    "order" : {
+      "title" : "Shipping to"
+    }
+  },
+  "shipping" : {
+    "title"     : "Shipping Options",
+    "price"     : "Shipping Price",
+    "noaddress" : "No address selected"
+  }
+}
