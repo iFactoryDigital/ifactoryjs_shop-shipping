@@ -32,12 +32,18 @@ class Address extends Model {
    * @return {Object}
    */
   async sanitise () {
+    // get details
+    let details = this.get();
+
+    // delete unwanted details
+    delete details.user;
+    delete details._id;
+
+    // set id
+    details.id = this.get('_id') ? this.get('_id').toString() : null;
+
     // return sanitised bot
-    return {
-      'id'        : this.get('_id') ? this.get('_id').toString() : null,
-      'name'      : this.get('name'),
-      'formatted' : this.get('formatted')
-    };
+    return details;
   }
 }
 

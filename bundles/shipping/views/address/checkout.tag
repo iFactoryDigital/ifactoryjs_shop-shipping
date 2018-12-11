@@ -1,12 +1,12 @@
 <address-checkout>
-  <div class="card card-shipping card-checkout mb-3">
+  <div class="card card-address card-checkout mb-3">
     <div class="card-header">
       { this.t('address.title') }
     </div>
     <div class="card-body">
       <div class="row row-eq-height">
-        <div class="col-6 col-md-4 pb-3" each={ address, i in opts.action.data.addresses || [] }>
-          <div class={ 'card card-address h-100' : true, 'card-address-active' : isAddress(address.id) }>
+        <div class="col-6 col-md-4 mb-3" each={ address, i in opts.action.data.addresses || [] }>
+          <div class={ 'card card-address' : true, 'card-address-active' : isAddress(address.id) }>
             <a href="#!" class="card-body" onclick={ onAddress }>
               <div class="address-title mb-2">
                 <b>{ address.name }</b>

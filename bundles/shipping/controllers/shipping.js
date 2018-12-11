@@ -111,14 +111,19 @@ class ShippingController extends Controller {
     if (!address) {
       // check if save
       if (action.value.save && await order.get('user')) {
-        console.log(action.value);
-
         // set address
         address = new Address(action.value.address);
 
+        // set fields
+        for (let key in action.value) {
+          // continue on address
+          if (key === 'address') continue;
+
+          // set value
+          address.set(key, action.value[key]);
+        }
 
         // set name
-        address.set('name', action.value.name);
         address.set('user', await order.get('user'));
 
         // save address
