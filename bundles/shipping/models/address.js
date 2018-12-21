@@ -3,7 +3,7 @@
  */
 
 // use strict
-'use strict';
+
 
 // import local dependencies
 const Model = require('model');
@@ -18,7 +18,7 @@ class Address extends Model {
    * @param attrs
    * @param options
    */
-  constructor () {
+  constructor() {
     // run super
     super(...arguments);
 
@@ -31,9 +31,9 @@ class Address extends Model {
    *
    * @return {Object}
    */
-  async sanitise () {
+  async sanitise() {
     // get details
-    let details = this.get();
+    const details = this.get();
 
     // delete unwanted details
     delete details.user;
