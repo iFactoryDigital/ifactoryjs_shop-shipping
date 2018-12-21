@@ -8,8 +8,7 @@ const EdenStore = require('default/public/js/store');
  * @type {shipping}
  */
 class ShippingStore {
-
-  constructor () {
+  constructor() {
     // bind methods
     this.build = this.build.bind(this);
 
@@ -20,7 +19,7 @@ class ShippingStore {
   /**
    * build shipping controller
    */
-  build () {
+  build() {
 
   }
 }

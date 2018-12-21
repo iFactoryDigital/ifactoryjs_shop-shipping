@@ -15,17 +15,17 @@ class ShippingController extends Controller {
   /**
    * construct example daemon class
    */
-  constructor () {
+  constructor() {
     // run super eden
-    super ();
+    super();
 
     // bind methods
     this.build = this.build.bind(this);
 
     // bind private methods
-    this._order    = this._order.bind(this);
-    this._address  = this._address.bind(this);
-    this._invoice  = this._invoice.bind(this);
+    this._order = this._order.bind(this);
+    this._address = this._address.bind(this);
+    this._invoice = this._invoice.bind(this);
     this._checkout = this._checkout.bind(this);
     this._sanitise = this._sanitise.bind(this);
 
@@ -36,14 +36,14 @@ class ShippingController extends Controller {
   /**
    * build shipping daemon
    */
-  build () {
+  build() {
     // checkout hooks
     this.eden.pre('checkout.init', this._checkout);
 
     // order hooks
-    this.eden.pre('order.init',     this._order);
-    this.eden.pre('order.address',  this._address);
-    this.eden.pre('order.invoice',  this._invoice);
+    this.eden.pre('order.init', this._order);
+    this.eden.pre('order.address', this._address);
+    this.eden.pre('order.invoice', this._invoice);
     this.eden.pre('order.shipping', this._shipping);
     this.eden.pre('order.sanitise', this._sanitise);
 
@@ -56,26 +56,26 @@ class ShippingController extends Controller {
    *
    * @param  {Object} order
    */
-  async _checkout (order) {
+  async _checkout(order) {
     // add action
     order.set('actions.address', {
-      'type' : 'address',
-      'data' : {
-        'addresses' : await Promise.all((await Address.find({
-          'user.id' : order.get('user.id')
+      type : 'address',
+      data : {
+        addresses : await Promise.all((await Address.find({
+          'user.id' : order.get('user.id'),
         })).map((address) => {
           // return sanitised address
           return address.sanitise();
-        }))
+        })),
       },
-      'priority' : 15
+      priority : 15,
     });
 
     // add action
     order.set('actions.shipping', {
-      'type'     : 'shipping',
-      'data'     : {},
-      'priority' : 20
+      type     : 'shipping',
+      data     : {},
+      priority : 20,
     });
   }
 
@@ -84,7 +84,7 @@ class ShippingController extends Controller {
    *
    * @param  {order} Order
    */
-  async _order (order) {
+  async _order(order) {
     // check found
     if (!order.get('actions.address')) order.set('error', 'Order is missing address');
   }
@@ -97,7 +97,7 @@ class ShippingController extends Controller {
    *
    * @return {Promise}
    */
-  async _address (order, action) {
+  async _address(order, action) {
     // check error
     if (order.get('error')) return;
 
@@ -115,7 +115,7 @@ class ShippingController extends Controller {
         address = new Address(action.value.address);
 
         // set fields
-        for (let key in action.value) {
+        for (const key in action.value) {
           // continue on address
           if (key === 'address') continue;
 
@@ -129,7 +129,7 @@ class ShippingController extends Controller {
         // save address
         await address.save();
       } else {
-        address      = action.value.address;
+        address = action.value.address;
         address.name = action.value.name;
       }
     }
@@ -149,9 +149,9 @@ class ShippingController extends Controller {
    *
    * @return {Promise}
    */
-  async _invoice (order, invoice) {
+  async _invoice(order, invoice) {
     // augment order
-    let action = order.get('actions.shipping');
+    const action = order.get('actions.shipping');
 
     // log
     if (action && action.value && action.value.amount) invoice.set('total', invoice.get('total') + parseFloat(action.value.amount));
@@ -165,13 +165,13 @@ class ShippingController extends Controller {
    *
    * @return {Promise}
    */
-  async _shipping (order, action) {
+  async _shipping(order, action) {
     // set shipping
-    let invoice = await order.get('invoice');
+    const invoice = await order.get('invoice');
 
     // add shipping price
     action.value = {
-      'amount' : 0
+      amount : 0,
     };
   }
 
@@ -183,7 +183,7 @@ class ShippingController extends Controller {
    *
    * @return {Promise}
    */
-  async _submit (req, order) {
+  async _submit(req, order) {
     // set status
     if (!order.get('shipped') && req.body.shipped === 'true') order.set('status', 'shipped');
 
@@ -198,15 +198,15 @@ class ShippingController extends Controller {
    *
    * @return {Promise}
    */
-  async _sanitise (data) {
+  async _sanitise(data) {
     // set order address
-    let address = await data.order.get('address');
+    const address = await data.order.get('address');
 
     // check address
     if (address) {
       // add address
-      data.sanitised.address  = address.sanitise ? await address.sanitise () : address;
-      data.sanitised.shipped  = data.order.get('shipped')  || false;
+      data.sanitised.address = address.sanitise ? await address.sanitise() : address;
+      data.sanitised.shipped = data.order.get('shipped') || false;
       data.sanitised.tracking = data.order.get('tracking') || null;
     }
   }
