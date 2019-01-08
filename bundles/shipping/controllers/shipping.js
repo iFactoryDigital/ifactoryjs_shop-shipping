@@ -86,7 +86,10 @@ class ShippingController extends Controller {
    */
   async _order (order) {
     // check found
-    if (!order.get('actions.address')) order.set('error', 'Order is missing address');
+    if (!order.get('actions.address') && !(order.get('skip') || []).includes('address')) order.set('error', {
+      id   : 'shipping.noaddress',
+      text : 'Order is missing address',
+    });
   }
 
   /**
@@ -102,7 +105,16 @@ class ShippingController extends Controller {
     if (order.get('error')) return;
 
     // check address
-    if (!action.value || (typeof action.value === 'object' && (!action.value.address || !Object.keys(action.value.address)))) return order.set('error', 'Order is missing address');
+    if (!action.value || (typeof action.value === 'object' && (!action.value.address || !Object.keys(action.value.address)))) {
+      // skip on address
+      if ((order.get('skip') || []).includes('address')) return;
+
+      // set error
+      return order.set('error', {
+        id   : 'shipping.noaddress',
+        text : 'Order is missing address',
+      });
+    }
 
     // check address
     let address = typeof action.value === 'string' ? await Address.findById(action.value) : null;
