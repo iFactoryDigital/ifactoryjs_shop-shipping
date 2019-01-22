@@ -14,10 +14,19 @@
      */
     setupGeocomplete () {
       // get location input
-      var input = jQuery('input[type="text"]', this.root);
+      let input = jQuery('input[type="text"]', this.root);
+      
+      // set options
+      let options = {};
+        
+      // check country
+      if (opts.country) {
+        // set country
+        options.country = opts.country;
+      }
 
       // geocomplete
-      if (input && input.length) input.geocomplete().on('geocode:result', (e, result) => {
+      if (input && input.length) input.geocomplete(options).on('geocode:result', (e, result) => {
         // set values
         this.address = {
           'id'  : result.id,
