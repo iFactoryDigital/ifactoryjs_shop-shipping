@@ -86,10 +86,12 @@ class ShippingController extends Controller {
    */
   async _order(order) {
     // check found
-    if (!order.get('actions.address') && !(order.get('skip') || []).includes('address')) order.set('error', {
-      id   : 'shipping.noaddress',
-      text : 'Order is missing address',
-    });
+    if (!order.get('actions.address') && !(order.get('skip') || []).includes('address')) {
+      order.set('error', {
+        id   : 'shipping.noaddress',
+        text : 'Order is missing address',
+      });
+    }
   }
 
   /**
