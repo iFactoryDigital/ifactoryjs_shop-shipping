@@ -143,8 +143,16 @@ class ShippingController extends Controller {
         // save address
         await address.save();
       } else {
+        // set address
         address = action.value.address;
-        address.name = action.value.name;
+
+        // loop
+        for (let key in action.value) {
+          // continue
+          if (key === 'address') continue;
+
+          address[key] = action.value[key];
+        }
       }
     }
 
