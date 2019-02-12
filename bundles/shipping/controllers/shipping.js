@@ -141,7 +141,7 @@ class ShippingController extends Controller {
         address.set('user', await order.get('user'));
 
         // save address
-        await address.save();
+        await address.save(await order.get('user'));
       } else {
         // set address
         address = action.value.address;
@@ -160,7 +160,7 @@ class ShippingController extends Controller {
     order.set('address', address);
 
     // save
-    await order.save();
+    await order.save(await order.get('user'));
   }
 
   /**
