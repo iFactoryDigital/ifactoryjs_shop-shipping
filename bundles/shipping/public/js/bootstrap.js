@@ -1,13 +1,13 @@
 
-// require local dependencies
-const EdenStore = require('default/public/js/store');
-
 /**
  * build shipping class
  *
  * @type {shipping}
  */
 class ShippingStore {
+  /**
+   * construct shipping store
+   */
   constructor() {
     // bind methods
     this.build = this.build.bind(this);

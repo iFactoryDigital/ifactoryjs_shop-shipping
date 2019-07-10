@@ -1,6 +1,5 @@
 
 // require dependencies
-const alert      = require('alert');
 const Controller = require('controller');
 
 // require dependencies
@@ -104,12 +103,12 @@ class ShippingController extends Controller {
    */
   async _address(order, action) {
     // check error
-    if (order.get('error')) return;
+    if (order.get('error')) return null;
 
     // check address
     if (!action.value || (typeof action.value === 'object' && (!action.value.address || !Object.keys(action.value.address)))) {
       // skip on address
-      if ((order.get('skip') || []).includes('address')) return;
+      if ((order.get('skip') || []).includes('address')) return null;
 
       // set error
       return order.set('error', {
@@ -129,13 +128,13 @@ class ShippingController extends Controller {
         address = new Address(action.value.address);
 
         // set fields
-        for (const key in action.value) {
+        Object.keys(action.value).forEach((key) => {
           // continue on address
-          if (key === 'address') continue;
+          if (key === 'address') return;
 
           // set value
           address.set(key, action.value[key]);
-        }
+        });
 
         // set name
         address.set('user', await order.get('user'));
@@ -144,15 +143,17 @@ class ShippingController extends Controller {
         await address.save(await order.get('user'));
       } else {
         // set address
+        // eslint-disable-next-line prefer-destructuring
         address = action.value.address;
 
         // loop
-        for (let key in action.value) {
+        Object.keys(action.value).forEach((key) => {
           // continue
-          if (key === 'address') continue;
+          if (key === 'address') return;
 
+          // set address value
           address[key] = action.value[key];
-        }
+        });
       }
     }
 
@@ -160,7 +161,7 @@ class ShippingController extends Controller {
     order.set('address', address);
 
     // save
-    await order.save(await order.get('user'));
+    return await order.save(await order.get('user'));
   }
 
   /**
@@ -188,9 +189,6 @@ class ShippingController extends Controller {
    * @return {Promise}
    */
   async _shipping(order, action) {
-    // set shipping
-    const invoice = await order.get('invoice');
-
     // add shipping price
     action.value = {
       amount : 0,
@@ -239,4 +237,4 @@ class ShippingController extends Controller {
  *
  * @type {shippingDaemon}
  */
-exports = module.exports = ShippingController;
+module.exports = ShippingController;
