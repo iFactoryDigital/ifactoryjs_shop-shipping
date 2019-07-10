@@ -1,7 +1,7 @@
 {
   "name": "@edenjs/shop-shipping",
   "description": "",
-  "version": "1.0.23",
+  "version": "1.1.0",
   "dependencies": {},
   "engines": {
     "node": ">= 8.0.0"
